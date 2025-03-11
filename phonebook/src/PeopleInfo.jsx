@@ -1,8 +1,8 @@
-const Person = ({ name, phone }) => {
+const Person = ({ name, number }) => {
   return (
     <div>
       <p>
-        {name} - {phone}
+        {name} - {number}
       </p>
     </div>
   );
@@ -14,9 +14,9 @@ function PeopleInfo({ persons }) {
       <h2>Numbers</h2>
       {persons.map((person) => (
         <Person
-          key={person.name}
+          key={person.id}
           name={person.name}
-          phone={person.phone}
+          number={person.number}
         ></Person>
       ))}
     </div>
