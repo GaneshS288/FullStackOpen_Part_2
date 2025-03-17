@@ -18,8 +18,17 @@ function addPerson(newPerson) {
   return res;
 }
 
-function deletePerson(id) {
-  const res = axios.delete(`${baseUrl}/${id}`).catch((err) => console.log(err));
+function updatePerson(person) {
+  const res = axios
+    .put(`${baseUrl}/${person.id}`, person)
+    .then((res) => res.data)
+    .catch((err) => console.log(err));
+  return res;
 }
 
-export default { getAllPersons, addPerson, deletePerson };
+function deletePerson(id) {
+  const res = axios.delete(`${baseUrl}/${id}`).catch((err) => console.log(err));
+  console.log(res);
+}
+
+export default { getAllPersons, addPerson, deletePerson, updatePerson };

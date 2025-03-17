@@ -28,11 +28,28 @@ const App = () => {
       (person) => person.name === newName.trim()
     );
 
-    if (isNameInPersons) {
-      alert(`${newName} is already added to the phonebook`);
-    } else {
-      const newPerson = { name: newName, number: newPhoneNumber };
+    const newPerson = { name: newName, number: newPhoneNumber };
 
+    if (isNameInPersons) {
+      const updateConfirmed = confirm(
+        `${newName} is already added, update phone number?`
+      );
+
+      if (updateConfirmed) {
+        const personId = persons.filter(
+          (person) => person.name === newName.trim()
+        )[0].id;
+        const updatedPerson = { ...newPerson, id: personId };
+
+        personsService.updatePerson(updatedPerson).then((res) => {
+          const updatedPersonsArray = persons.map((person) => {
+            return person.id === personId ? res : { ...person };
+          });
+
+          setPersons(updatedPersonsArray);
+        });
+      }
+    } else {
       let newPersonsArray = persons.map((person) => ({ ...person }));
       personsService
         .addPerson(newPerson)
@@ -50,7 +67,7 @@ const App = () => {
         .filter((person) => person.id !== id)
         .map((person) => ({ ...person }));
 
-        setPersons(updatedPersons);
+      setPersons(updatedPersons);
     }
   }
 
@@ -75,7 +92,10 @@ const App = () => {
         setNewPhoneNumber={setNewPhoneNumber}
       ></Form>
 
-      <PeopleInfo persons={peopleToShow} handleDelete={deletePerson}></PeopleInfo>
+      <PeopleInfo
+        persons={peopleToShow}
+        handleDelete={deletePerson}
+      ></PeopleInfo>
     </div>
   );
 };
