@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import personsService from "./services/persons";
 import Search from "./Search";
 import Form from "./Form";
 import PeopleInfo from "./PeopleInfo";
@@ -10,10 +10,7 @@ const App = () => {
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
   const [filterKeyword, setFilterKeyword] = useState("");
 
-  const peopleToShow =
-    filterKeyword.trim() === ""
-      ? persons
-      : filterPersons();
+  const peopleToShow = filterKeyword.trim() === "" ? persons : filterPersons();
 
   function filterPersons() {
     const filteredPersons = persons.filter((person) => {
@@ -22,7 +19,7 @@ const App = () => {
     });
 
     return filteredPersons;
-  }    
+  }
 
   function addPerson(event) {
     event.preventDefault();
@@ -35,20 +32,17 @@ const App = () => {
       alert(`${newName} is already added to the phonebook`);
     } else {
       const newPerson = { name: newName, number: newPhoneNumber };
-      
-      axios.post("http://localhost:3001/persons", newPerson)
-      .then((res) => {
-        let newPersonsArray = persons.map((person) => ({...person}))
-        newPersonsArray.push(res.data);
-        setPersons(newPersonsArray);
-      } )
-      
+
+      let newPersonsArray = persons.map((person) => ({ ...person }));
+      personsService
+        .addPerson(newPerson)
+        .then((res) => setPersons([...newPersonsArray, res]));
     }
   }
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((res) => setPersons(res.data));
-  }, [])
+    personsService.getAllPersons().then((res) => setPersons(res));
+  }, []);
 
   return (
     <div>
