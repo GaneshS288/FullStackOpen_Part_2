@@ -40,6 +40,20 @@ const App = () => {
     }
   }
 
+  function deletePerson(id, name) {
+    const deleteConfirmed = confirm(`Delete ${name}?`);
+
+    if (deleteConfirmed) {
+      personsService.deletePerson(id);
+
+      const updatedPersons = persons
+        .filter((person) => person.id !== id)
+        .map((person) => ({ ...person }));
+
+        setPersons(updatedPersons);
+    }
+  }
+
   useEffect(() => {
     personsService.getAllPersons().then((res) => setPersons(res));
   }, []);
@@ -61,7 +75,7 @@ const App = () => {
         setNewPhoneNumber={setNewPhoneNumber}
       ></Form>
 
-      <PeopleInfo persons={peopleToShow}></PeopleInfo>
+      <PeopleInfo persons={peopleToShow} handleDelete={deletePerson}></PeopleInfo>
     </div>
   );
 };
