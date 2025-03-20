@@ -73,10 +73,19 @@ const App = () => {
   }
 
   function deletePerson(id, name) {
+    setNotification({ message: "", status: "success" });
     const deleteConfirmed = confirm(`Delete ${name}?`);
 
     if (deleteConfirmed) {
-      personsService.deletePerson(id);
+      const res = personsService.deletePerson(id);
+      res.then((err) => {
+        err === "failed"
+          ? setNotification({
+              message: `${name} was alredy deleted`,
+              status: "failure",
+            })
+          : null;
+      });
 
       const updatedPersons = persons
         .filter((person) => person.id !== id)

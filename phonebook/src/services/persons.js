@@ -27,8 +27,10 @@ function updatePerson(person) {
 }
 
 function deletePerson(id) {
-  const res = axios.delete(`${baseUrl}/${id}`).catch((err) => console.log(err));
-  console.log(res);
+  const res = axios
+    .delete(`${baseUrl}/${id}`)
+    .catch((err) => (err.message = "failed"));
+  return res;
 }
 
 export default { getAllPersons, addPerson, deletePerson, updatePerson };
