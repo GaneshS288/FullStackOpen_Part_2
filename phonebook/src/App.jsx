@@ -3,12 +3,17 @@ import personsService from "./services/persons";
 import Search from "./Search";
 import Form from "./Form";
 import PeopleInfo from "./PeopleInfo";
+import Notification from "./Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
   const [filterKeyword, setFilterKeyword] = useState("");
+  const [notification, setNotification] = useState({
+    message: "",
+    status: "success",
+  });
 
   const peopleToShow = filterKeyword.trim() === "" ? persons : filterPersons();
 
@@ -39,6 +44,7 @@ const App = () => {
         const personId = persons.filter(
           (person) => person.name === newName.trim()
         )[0].id;
+
         const updatedPerson = { ...newPerson, id: personId };
 
         personsService.updatePerson(updatedPerson).then((res) => {
@@ -46,6 +52,10 @@ const App = () => {
             return person.id === personId ? res : { ...person };
           });
 
+          setNotification({
+            message: `${updatedPerson.name} successfully updated`,
+            status: "success",
+          });
           setPersons(updatedPersonsArray);
         });
       }
@@ -54,6 +64,11 @@ const App = () => {
       personsService
         .addPerson(newPerson)
         .then((res) => setPersons([...newPersonsArray, res]));
+
+      setNotification({
+        message: `${newPerson.name} successfully added`,
+        status: "success",
+      });
     }
   }
 
@@ -78,6 +93,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification notification={notification}></Notification>
 
       <Search
         filterKeyword={filterKeyword}
