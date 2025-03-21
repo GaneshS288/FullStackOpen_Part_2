@@ -46,6 +46,9 @@ function CountryList({ countryArray }) {
       ></Country>
     );
   }
+  else if(countryArray.length === 0) {
+    return <p>Couldn't find any countries matching that query</p>
+  }
 }
 
 export default CountryList;
